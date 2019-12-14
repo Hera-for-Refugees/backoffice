@@ -4,7 +4,7 @@
     <a-layout-sider collapsible v-model="collapsed" theme="light">
       <div class="logo">
         <router-link to="/">
-          merhaba
+          <img src="/logo.svg" width="60" />
         </router-link>
       </div>
       <a-menu
@@ -138,7 +138,7 @@ export default {
 
 <style lang="less" scoped>
 .logo {
-  height: 80px;
-  background-color: #333;
+  padding: 24px;
+  display: flex;
 }
 </style>
