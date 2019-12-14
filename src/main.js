@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueWait from 'vue-wait'
+import moment from 'moment'
 import App from './app.vue'
 import router from './router'
 import store from '@/store'
@@ -16,6 +17,7 @@ Vue.use(VueWait)
 Vue.use(Antd)
 Vue.config.productionTip = false
 Vue.prototype.$wait = wait
+Vue.prototype.$moment = moment
 
 const init = async () => {
   try {
