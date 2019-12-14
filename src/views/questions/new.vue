@@ -1,13 +1,12 @@
 <template>
   <div>
-    <h1>Dashboard page</h1>
-    <a-button type="primary">Button</a-button>
+    <h1>categories-new page</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'dashboard',
+  name: 'categories-new',
 
   data() {
     return {}

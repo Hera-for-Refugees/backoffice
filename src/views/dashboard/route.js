@@ -2,7 +2,7 @@ const dashboard = () => import(/* webpackChunkName: "page-dashboard" */ './')
 
 export default [
   {
-    path: '/dashboard',
+    path: '/',
     name: 'dashboard',
     component: dashboard
   }
