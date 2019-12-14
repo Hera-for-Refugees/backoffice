@@ -10,7 +10,7 @@
       <a-menu
         theme="light"
         :defaultSelectedKeys="['dashboard']"
-        :defaultOpenKeys="[]"
+        :defaultOpenKeys="defaultOpenKeys"
         :selectedKeys="selectedKeys"
         mode="inline"
         :inlineCollapsed="collapsed"
@@ -28,7 +28,7 @@
           <a-icon type="calendar" />
           <span>Vaccinate Calendar</span>
         </a-menu-item>
-        <a-sub-menu key="notification">
+        <a-sub-menu key="notifications">
           <span slot="title">
             <a-icon type="sound" />
             <span>Notification</span>
@@ -52,7 +52,7 @@
           <a-menu-item key="categories">Categories</a-menu-item>
           <a-menu-item key="questions">Questions</a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="app-screen">
+        <a-sub-menu key="screen">
           <span slot="title">
             <a-icon type="book" />
             <span>App Screen</span>
@@ -84,11 +84,12 @@ export default {
     }
   },
   computed: {
-    selectedKeys: {
-      get() {
-        return [this.$route.name]
-      },
-      set() {}
+    selectedKeys() {
+      return [this.$route.name]
+    },
+    defaultOpenKeys() {
+      // TODO: return active page's parent keys
+      return []
     }
   },
   methods: {
@@ -138,6 +139,6 @@ export default {
 <style lang="less" scoped>
 .logo {
   height: 80px;
-  background-color: #ccc;
+  background-color: #333;
 }
 </style>
