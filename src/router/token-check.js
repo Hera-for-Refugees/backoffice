@@ -1,19 +1,16 @@
-// import store from '@/store'
-
 export default (to, from, next) => {
-  // const isAuthPage = to.matched.some(record => record.meta.auth)
+  const isAuthPage = to.matched.some(record => record.meta.auth)
+  const token = localStorage.getItem('token')
 
-  // if (store.$state.token) {
-  //   if (isAuthPage) {
-  //     return next({ name: 'dashboard' })
-  //   }
-  //   next()
-  // } else {
-  //   if (!isAuthPage) {
-  //     return next({ name: 'login' })
-  //   }
-  //   next()
-  // }
-
-  next()
+  if (token) {
+    if (isAuthPage) {
+      return next('/')
+    }
+    next()
+  } else {
+    if (!isAuthPage) {
+      return next('/auth-login')
+    }
+    next()
+  }
 }

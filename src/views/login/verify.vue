@@ -5,14 +5,14 @@
         <a-form formLayout="vertical" :form="form" @submit="handleSubmit">
           <a-form-item>
             <a-input
-              placeholder="Phone Number"
+              placeholder="Verify Number"
               v-decorator="[
-                'phoneNumber',
+                'token',
                 {
                   rules: [
                     {
                       required: true,
-                      message: 'Please input your phone number'
+                      message: 'Please input verify code'
                     }
                   ]
                 }
@@ -44,8 +44,15 @@ export default {
 
   data() {
     return {
-      wait: 'wait-login',
+      wait: 'wait-verify',
       form: this.$form.createForm(this)
+    }
+  },
+
+  beforeCreate() {
+    this.authyId = this.$route.query.authyId
+    if (!this.authyId) {
+      this.$router.push('/auth-login')
     }
   },
 
@@ -53,17 +60,17 @@ export default {
     handleSubmit(e) {
       e.preventDefault()
       this.form.validateFields(async (err, values) => {
-        console.log(err)
+        console.log(err, values)
         if (err) return
 
         try {
           this.$wait.start(this.wait)
-          const { data } = await Service.post('/users/login', values)
-          console.log(data)
-          await this.$router.push({
-            path: '/auth-verify',
-            query: { authyId: data.authyId, phoneNumber: values.phoneNumber }
+          const { data } = await Service.post('/users/login/two-factor', {
+            authyId: this.authyId,
+            ...values
           })
+          this.$actions.setUser(data)
+          this.$router.push('/')
         } catch (err) {
           console.log(err)
           this.$message.error(err.response.data.message)
