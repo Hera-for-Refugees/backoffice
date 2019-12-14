@@ -25,8 +25,8 @@
             <a-button
               type="primary"
               html-type="submit"
-              :disabled="$wait.is(wait)"
-              :loading="$wait.is(wait)"
+              :disabled="$wait.is(waiter)"
+              :loading="$wait.is(waiter)"
             >
               Login
             </a-button>
@@ -44,7 +44,7 @@ export default {
 
   data() {
     return {
-      wait: 'wait-verify',
+      waiter: 'wait-verify',
       form: this.$form.createForm(this)
     }
   },
@@ -64,7 +64,7 @@ export default {
         if (err) return
 
         try {
-          this.$wait.start(this.wait)
+          this.$wait.start(this.waiter)
           const { data } = await Service.post('/users/login/two-factor', {
             authyId: this.authyId,
             ...values
@@ -75,7 +75,7 @@ export default {
           console.log(err)
           this.$message.error(err.response.data.message)
         } finally {
-          this.$wait.end(this.wait)
+          this.$wait.end(this.waiter)
         }
       })
     }
