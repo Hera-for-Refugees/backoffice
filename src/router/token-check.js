@@ -1,4 +1,4 @@
-import store from '@/store'
+// import store from '@/store'
 
 export default (to, from, next) => {
   // const isAuthPage = to.matched.some(record => record.meta.auth)

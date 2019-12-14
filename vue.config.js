@@ -3,8 +3,8 @@ const path = require('path')
 module.exports = {
   css: {
     loaderOptions: {
-      sass: {
-        // prependData: `@import "@/styles/config/variables.scss";`
+      less: {
+        prependData: `@import "@/styles/variables.less";`
       }
     }
   },
