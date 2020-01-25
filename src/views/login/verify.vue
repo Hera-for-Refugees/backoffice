@@ -70,7 +70,7 @@ export default {
             ...values
           })
           this.$actions.setUser(data)
-          this.$router.push('/')
+          await this.$router.push('/')
         } catch (err) {
           console.log(err)
           this.$message.error(err.response.data.message)

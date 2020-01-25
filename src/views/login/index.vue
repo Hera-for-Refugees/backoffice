@@ -58,11 +58,18 @@ export default {
 
         try {
           this.$wait.start(this.waiter)
-          const { data } = await Service.post('/users/login', values)
+          const { data } = await Service.post('/users/login', {
+            ...values,
+            LanguageId: 1,
+            email: 'ademilter@gmail.com'
+          })
           console.log(data)
           await this.$router.push({
             path: '/auth-verify',
-            query: { authyId: data.authyId, phoneNumber: values.phoneNumber }
+            query: {
+              authyId: data.authyId,
+              phoneNumber: values.phoneNumber
+            }
           })
         } catch (err) {
           console.log(err)
