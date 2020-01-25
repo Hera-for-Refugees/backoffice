@@ -12,19 +12,25 @@
     <div style="background-color: #fff; padding: 16px; margin-top: 16px">
       <a-table
         :columns="columns"
-        :rowKey="record => record.id"
-        :dataSource="data"
+        rowKey="id"
+        :dataSource="rows"
         :pagination="pagination"
         :loading="$wait.is(waiter)"
         @change="handleTableChange"
       >
-        <template slot="fullName" slot-scope="text, record">
-          <b>{{ record.firstName }} {{ record.lastName }}</b>
-        </template>
         <template slot="birthDate" slot-scope="birthDate">
-          {{ $moment(birthDate).format('DD MMMM YYYY') }}
-          ({{ $moment().diff($moment(birthDate, 'YYYY-MM-DD'), 'years') }})
+          {{ birthDate }}
+          {{ $moment(record).format('DD MMMM YYYY') }}
+          ({{ $moment().diff($moment(record, 'YYYY-MM-DD'), 'years') }})
         </template>
+        <!--        <template slot="fullName" slot-scope="record">-->
+        <!--          <b>{{ record }}</b>-->
+        <!--        </template>-->
+        <!--        <template slot="birthDate" slot-scope="text, birthDate">-->
+        <!--          {{ text }}-->
+        <!--          {{ $moment(birthDate).format('DD MMMM YYYY') }}-->
+        <!--          ({{ $moment().diff($moment(birthDate, 'YYYY-MM-DD'), 'years') }})-->
+        <!--        </template>-->
       </a-table>
     </div>
   </div>
@@ -38,36 +44,22 @@ export default {
 
   data() {
     return {
-      data: [],
-      pagination: {},
       waiter: 'wait-member-fetch',
+      rows: [],
+      pagination: { page: 1, limit: 1, total: 0 },
+      sorter: ['id DESC'],
       columns: [
-        {
-          title: 'ID',
-          dataIndex: 'id'
-        },
-        {
-          title: 'Full name',
-          dataIndex: 'fullName',
-          scopedSlots: { customRender: 'fullName' }
-        },
-        {
-          title: 'Gender',
-          dataIndex: 'gender'
-        },
-        {
-          title: 'Age',
-          dataIndex: 'birthDate',
-          scopedSlots: { customRender: 'birthDate' }
-        },
-        {
-          title: 'Phone',
-          dataIndex: 'phoneNumber'
-        },
-        {
-          title: 'Email',
-          dataIndex: 'email'
-        }
+        { title: 'id', dataIndex: 'id' },
+        { title: 'firstName', dataIndex: 'firstName' },
+        { title: 'lastName', dataIndex: 'lastName' },
+        { title: 'birthDate', dataIndex: 'birthDate' },
+        { title: 'email', dataIndex: 'email' },
+        { title: 'phoneNumber', dataIndex: 'phoneNumber' },
+        { title: 'authyId', dataIndex: 'authyId' },
+        { title: 'acceptedLicense', dataIndex: 'acceptedLicense' },
+        { title: 'createdAt', dataIndex: 'createdAt' },
+        { title: 'gender', dataIndex: 'gender' },
+        { title: 'lastPeriodDate', dataIndex: 'lastPeriodDate' }
       ]
     }
   },
@@ -79,40 +71,41 @@ export default {
   methods: {
     handleTableChange(pagination, filters, sorter) {
       console.log(pagination, filters, sorter)
-      // const pager = { ...this.pagination }
-      // pager.current = pagination.current
-      // this.pagination = pager
-      // this.fetch({
-      //   results: pagination.pageSize,
-      //   page: pagination.current,
-      //   sortField: sorter.field,
-      //   sortOrder: sorter.order,
-      //   ...filters
-      // })
+      this.pagination.current = pagination.current
+      this.fetch()
     },
-    async fetch(params = {}) {
-      console.log('params:', params)
-      // this.$wait(this.waiter)
 
+    async fetch() {
       try {
         this.$wait.start(this.waiter)
-        const { data } = await Service.get('/users', { params })
-        console.log(data)
-        this.data = data
+        const { data } = await Service.get('/users', {
+          params: {
+            page: this.pagination.page,
+            limit: this.pagination.limit,
+            order: this.sorter,
+            attributes: [
+              'acceptedLicense',
+              'authyId',
+              'birthDate',
+              'createdAt',
+              'updatedAt',
+              'email',
+              'firstName',
+              'gender',
+              'id',
+              'lastName',
+              'lastPeriodDate',
+              'phoneNumber'
+            ]
+          }
+        })
+        this.pagination.total = data.count
+        this.rows = data.rows
       } catch (err) {
         console.log(err)
       } finally {
         this.$wait.end(this.waiter)
       }
-
-      //   const pagination = { ...this.pagination }
-      //   // Read total count from server
-      //   // pagination.total = data.totalCount;
-      //   pagination.total = 200
-      //   this.loading = false
-      //   this.data = data.results
-      //   this.pagination = pagination
-      // })
     }
   }
 }
