@@ -16,7 +16,7 @@ function Index() {
   const [sorter, setSorter] = useState(['id DESC'])
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 1
+    pageSize: 10
   })
 
   useEffect(() => {
@@ -30,21 +30,7 @@ function Index() {
         params: {
           page: pagination.current,
           limit: pagination.pageSize,
-          order: sorter,
-          attributes: [
-            'acceptedLicense',
-            'authyId',
-            'birthDate',
-            'createdAt',
-            'updatedAt',
-            'email',
-            'firstName',
-            'gender',
-            'id',
-            'lastName',
-            'lastPeriodDate',
-            'phoneNumber'
-          ]
+          order: sorter
         }
       })
       setData({ rows: data.rows, total: data.count })
@@ -76,18 +62,20 @@ function Index() {
   //   }
   // }
 
-  const change = (page, _, sorter) => {
+  const change = (page, filter, sorter) => {
     // console.log(page, filters, sorter)
-    setSorter([
-      { key: sorter.field, value: sorter.order === 'ascend' ? 'ASC' : 'DESC' }
-    ])
     setPagination({ ...pagination, current: page.current })
+    if (sorter.field) {
+      setSorter([
+        `${sorter.field} ${sorter.order === 'ascend' ? 'ASC' : 'DESC'}`
+      ])
+    }
   }
 
   return (
     <MasterLayout>
       <PageHeader
-        title="Applications"
+        title="Members"
         totalData={data.total}
         extra={[
           <Button
@@ -114,7 +102,7 @@ function Index() {
 
       <Content style={{ padding: 8, backgroundColor: '#fff' }}>
         <Table
-          scroll={{ x: 1800 }}
+          scroll={{ x: 1400 }}
           columns={columns}
           size="middle"
           rowKey="id"
